@@ -1,0 +1,2 @@
+[console_scripts]
+cosmo-research = cosmo_research.cli:main
