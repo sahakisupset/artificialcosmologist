@@ -42,9 +42,9 @@ def main() -> None:
         if args.ads:
             if not settings.ads_api_token:
                 raise SystemExit("Set ADS_API_TOKEN to use the ADS client")
-            papers.extend(ADSClient(settings.ads_api_token).search(args.query, args.rows))
+            papers.extend(ADSClient(settings.ads_api_token, ca_bundle=settings.ssl_ca_bundle).search(args.query, args.rows))
         if args.arxiv:
-            papers.extend(ArxivIngestor().search(args.query, args.rows))
+            papers.extend(ArxivIngestor(ca_bundle=settings.ssl_ca_bundle).search(args.query, args.rows))
         index = LiteratureIndex(settings.chroma_persist_dir, settings.chroma_collection)
         print(json.dumps({"retrieved": len(papers), "indexed": index.index(papers), "total_in_index": index.count}))
 

@@ -8,5 +8,6 @@ class Settings(BaseSettings):
     deepseek_model: str = "deepseek-reasoner"
     chroma_persist_dir: str = "./data/chroma"
     chroma_collection: str = "cosmology-literature"
+    ssl_ca_bundle: str | None = None
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")

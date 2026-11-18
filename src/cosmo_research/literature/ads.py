@@ -8,12 +8,13 @@ from .models import Paper
 class ADSClient:
     endpoint = "https://api.adsabs.harvard.edu/v1/search/query"
 
-    def __init__(self, token: str, timeout: float = 30.0):
+    def __init__(self, token: str, timeout: float = 30.0, ca_bundle: str | None = None):
         if not token:
             raise ValueError("An ADS API token is required")
         self._client = httpx.Client(
             headers={"Authorization": f"Bearer {token}", "Accept": "application/json"},
             timeout=timeout,
+            verify=ca_bundle or True,
         )
 
     def search(self, query: str, rows: int = 50) -> list[Paper]:

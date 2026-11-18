@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from chromadb import PersistentClient
 from chromadb.api.models.Collection import Collection
 
@@ -6,7 +8,9 @@ from .models import Paper
 
 class LiteratureIndex:
     def __init__(self, persist_directory: str = "./data/chroma", collection_name: str = "cosmology-literature"):
-        self._client = PersistentClient(path=persist_directory)
+        resolved_directory = Path(persist_directory).expanduser().resolve()
+        resolved_directory.mkdir(parents=True, exist_ok=True)
+        self._client = PersistentClient(path=str(resolved_directory))
         self.collection: Collection = self._client.get_or_create_collection(
             name=collection_name,
             metadata={"hnsw:space": "cosine"},

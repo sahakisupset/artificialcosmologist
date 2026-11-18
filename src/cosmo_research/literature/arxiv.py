@@ -9,8 +9,9 @@ from .models import Paper
 class ArxivIngestor:
     endpoint = "https://export.arxiv.org/api/query"
 
-    def __init__(self, timeout: float = 30.0):
+    def __init__(self, timeout: float = 30.0, ca_bundle: str | None = None):
         self._timeout = timeout
+        self._ca_bundle = ca_bundle
 
     def search(self, query: str, max_results: int = 50) -> list[Paper]:
         response = httpx.get(
@@ -18,6 +19,7 @@ class ArxivIngestor:
             params={"search_query": f"all:{query}", "start": 0, "max_results": max_results, "sortBy": "submittedDate", "sortOrder": "descending"},
             timeout=self._timeout,
             headers={"User-Agent": "cosmo-research/0.1"},
+            verify=self._ca_bundle or True,
         )
         response.raise_for_status()
         feed = feedparser.parse(response.text)
